@@ -21,30 +21,16 @@ def generate_answer(query: str, context_chunks: list[str]) -> str:
 
     user_prompt = f"Context:\n{context_str}\n\nQuestion: {query}\n\nAnswer:"
 
-    # Hardcoded standard Groq chat completion models
-    model_candidates = [
-        "llama-3.3-70b-versatile",
-        "llama-3.1-8b-instant",
-        "llama3-70b-8192",
-        "llama3-8b-8192",
-        "mixtral-8x7b-32768",
-        "model="llama-3.3-70b-versatile"
-    ]
-
-    last_error = ""
-    for model_name in model_candidates:
-        try:
-            response = client.chat.completions.create(
-                model=model_name,
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_prompt}
-                ],
-                temperature=0.1
-            )
-            return response.choices[0].message.content
-        except Exception as e:
-            last_error = str(e)
-            continue
-
-    return f"Error executing generation: {last_error}"
+    try:
+        response = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt}
+            ],
+            temperature=0.1,
+            max_tokens=1024
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        return f"Error executing generation: {e}"
