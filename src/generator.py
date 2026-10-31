@@ -23,7 +23,7 @@ def generate_answer(query: str, context_chunks: list[str]) -> str:
 
     try:
         response = client.chat.completions.create(
-          model="openai/gpt-oss-120b",
+            model="openai/gpt-oss-120b",
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt}
